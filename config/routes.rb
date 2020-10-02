@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  
+
+  resources :appearances, only: [:index, :create]
+  mount ActionCable.server => '/cable'
+
   resources :users do 
     resources :friendship
   end

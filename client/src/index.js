@@ -3,11 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {BrowserRouter} from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom';
+import { ActionCableProvider } from 'react-actioncable-provider';
+
 
 ReactDOM.render(
   <BrowserRouter>
-    <App />
+    <ActionCableProvider url={'ws://localhost:3000/cable'}>
+      <App />
+      </ActionCableProvider>
   </BrowserRouter>,
   document.getElementById('root')
 );
