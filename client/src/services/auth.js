@@ -30,3 +30,7 @@ export const removeToken = () => {
   api.defaults.headers.common.authorization = null
 }
 
+export const showUser = async () => {
+  const resp = await api.post('')
+}
+

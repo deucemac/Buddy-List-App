@@ -1,5 +1,5 @@
 class AppearancesController < ApplicationController
-  before_action :find_user, only: :index
+  before_action :find_user, only: [:index, :create]
   
   def index
     @appearances = Appearance.where("requester_id = ? OR addressee_id = ?", @user.id, @user.id)
@@ -12,6 +12,7 @@ class AppearancesController < ApplicationController
     else
       @appearance = Appearance.find(id: params[:id])
     end
+    render json: @user
     ActionCable.server.broadcast 'appearances_channel', appearance
   end
 
