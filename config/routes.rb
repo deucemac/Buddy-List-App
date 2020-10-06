@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
-
-  resources :appearances, only: [:index, :create]
+  resources :users do 
+    resources :appearances, only: [:index, :create]
+  end
+  
   mount ActionCable.server => '/cable'
 
   resources :users do 

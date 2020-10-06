@@ -19,8 +19,8 @@ class Users extends Component {
       <div>
         {this.state.users && this.state.users.map(user => (
           <div className='user'>
-            <p key={user.id}>{user.username}</p>
-            <img src={user.image} alt='profile'/>
+            <p key={user.id} style={{marginLeft: "30px"}}>{user.username}</p>
+            <img src={user.image} style={{ width: "50px", marginLeft: "30px" }} alt='profile'/>
           </div>
         ))}
       </div>

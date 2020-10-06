@@ -5,6 +5,6 @@ class AppearancesChannel < ApplicationCable::Channel
 
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
-    raise NotImplementedError
+    # raise NotImplementedError
   end
 end

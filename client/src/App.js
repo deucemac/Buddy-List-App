@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import './App.css';
 import Login from './Login'
 import { withRouter } from 'react-router-dom'
-import { loginUser, verifyUser, removeToken} from './services/auth'
+import { loginUser, verifyUser, removeToken, appearance, makeAppearance} from './services/auth'
 import Header from './Header'
+import Users from './Users'
 import {ActionCableConsumer} from 'react-actioncable-provider'
 
 class App extends Component {
@@ -21,11 +22,22 @@ class App extends Component {
     this.setState({
       currentUser
     })
-    // fetch(`http://localhost:3000/appearances`)
-    //   .then(res => res.json())
-    //   .then(roomsArr => this.setState({
-    //     rooms: roomsArr
-    //   }))
+    if (currentUser) this.createAppearance(currentUser.id, true)
+    
+  }
+
+  // fetchAppearance = async (user_id) => {
+  //   const rooms = await appearance(user_id);
+  //   this.setState({
+  //     rooms
+  //   })
+  // }
+
+  createAppearance = async (user, status) => {
+    const rooms = await makeAppearance(user, status);
+    this.setState({
+      rooms
+    })
   }
 
   handleReceivedRoom = response => {
@@ -33,7 +45,9 @@ class App extends Component {
     this.setState({
       rooms: [...this.state.rooms, response.room]
     })
-  }
+  } 
+ 
+
 
   handleLogin = async (e) => {
     e.preventDefault()
@@ -69,15 +83,19 @@ class App extends Component {
           <Header
             currentUser={this.state.currentUser}
             signOut={this.handleSignOut}
-        /> : <Login
+          />
+          : <Login
           userData={this.state.userData}
           handleChange={this.handleChange}
           handleLogin={this.handleLogin}
           />}
+        
         <ActionCableConsumer
           channel={{ channel: 'AppearancesChannel' }}
           onReceived={this.handleReceivedRoom}
         />
+
+        <Users />
         
 
       </div>

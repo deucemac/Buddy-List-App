@@ -2,23 +2,31 @@ class AppearancesController < ApplicationController
   before_action :find_user, only: [:index, :create]
   
   def index
-    @appearances = Appearance.where("requester_id = ? OR addressee_id = ?", @user.id, @user.id)
-    render json: @appearances
+    @appearances = Appearance.where(user_id: @user.id)
+    render json: @appearances, include: "**"
   end
 
   def create
-    if Appearance.find(id: params[:id]) === nil
-      @appearance = Appearance.create(appearance_params)
-    else
-      @appearance = Appearance.find(id: params[:id])
+    # if Appearance.find(id: params[:user_id]) === nil
+    #   @appearance = Appearance.new(appearance_params)
+    # else
+    #   @appearance = Appearance.find(id: params[:id])
+    # end
+    
+    @appearance = Appearance.new(appearance_params)
+    @appearance.user = @user
+    if @appearance.save
+      render json: @appearance, status: :created
+    else 
+      render json: @appearance.errors, status: :unprocessable_entity
     end
-    render json: @user
-    ActionCable.server.broadcast 'appearances_channel', appearance
+
+    ActionCable.server.broadcast 'appearances_channel', @appearance
   end
 
   private 
   def appearance_params
-    params.require(:appearance).permit(:status)
+    params.require(:appearance).permit(:status, :user_id)
   end
 
   def find_user
