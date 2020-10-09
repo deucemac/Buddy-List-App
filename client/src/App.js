@@ -19,43 +19,60 @@ class App extends Component {
 
   componentDidMount = async () => {
     const currentUser = await verifyUser()
+    const rooms = currentUser.id ? await makeAppearance(currentUser.id, true) : this.state.rooms
     this.setState({
-      currentUser
-    })
-    if (currentUser) this.createAppearance(currentUser.id, true)
-    
-  }
-
-  // fetchAppearance = async (user_id) => {
-  //   const rooms = await appearance(user_id);
-  //   this.setState({
-  //     rooms
-  //   })
-  // }
-
-  createAppearance = async (user, status) => {
-    const rooms = await makeAppearance(user, status);
-    this.setState({
+      currentUser,
       rooms
     })
   }
 
+  // setUser = async () => {
+  //   const currentUser = await verifyUser()
+  //   const rooms = currentUser.id ? await makeAppearance(currentUser.id, true) : this.state.rooms
+  //   if (rooms) {
+  //     this.setState({
+  //       currentUser,
+  //       rooms
+  //     })
+  //   }
+  // }
+
   handleReceivedRoom = response => {
     console.log(response)
     this.setState({
-      rooms: [...this.state.rooms, response.room]
+      rooms: [this.state.rooms, response]
     })
   } 
  
 
 
+  // handleLogin = async (e) => {
+  //   console.log('hey')
+  //   e.preventDefault()
+  //   const currentUser = await loginUser(this.state.userData)
+  //   this.setState({
+  //     currentUser
+  //   })
+  // }
+
   handleLogin = async (e) => {
+    console.log('hey')
     e.preventDefault()
     const currentUser = await loginUser(this.state.userData)
-    this.setState({
-      currentUser
-    })
+    // if (currentUser) await verifyUser()
+    const rooms = currentUser.id ? await makeAppearance(currentUser.id, true) : this.state.rooms
+    if (rooms.length) {
+      this.setState({
+        currentUser, 
+        rooms
+      })
+    } else {
+      this.setState({
+        currentUser
+      })
+    }
   }
+  
 
   handleSignOut = async (e) => {
     this.setState({
@@ -77,6 +94,9 @@ class App extends Component {
     console.log(value)
   }
   render() {
+    // let appearance = this.state.rooms
+    
+
     return (
       <div>
         {this.state.currentUser ?
@@ -87,15 +107,19 @@ class App extends Component {
           : <Login
           userData={this.state.userData}
           handleChange={this.handleChange}
-          handleLogin={this.handleLogin}
+            handleLogin={this.handleLogin}
+            setUser={this.setUser}
           />}
         
-        <ActionCableConsumer
+        {this.state.currentUser ? <ActionCableConsumer
           channel={{ channel: 'AppearancesChannel' }}
           onReceived={this.handleReceivedRoom}
-        />
+        /> : null}
 
-        <Users />
+        <Users
+          appearances={this.state.rooms.user_id}
+        />
+          
         
 
       </div>

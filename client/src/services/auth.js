@@ -16,6 +16,7 @@ export const registerUser = async (registerData) => {
 }
 
 export const verifyUser = async () => {
+  // console.log('when')
   const token = localStorage.getItem('authToken');
   // console.log(token)
   if (token) {
@@ -43,8 +44,9 @@ export const removeToken = () => {
 // }
 
 export const makeAppearance = async (user_id, status) => {
-  const resp = await api.post(`/users/${user_id}/appearances`, {status: status})
-  console.log(resp)
-  return resp
+  const resp = await api.post(`/users/${user_id}/appearances`, { status: status })
+  
+  console.log(resp.data)
+  return resp.data
 }
 

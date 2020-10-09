@@ -3,7 +3,7 @@ class AppearancesController < ApplicationController
   
   def index
     @appearances = Appearance.where(user_id: @user.id)
-    render json: @appearances, include: "**"
+    render json: @appearances
   end
 
   def create
