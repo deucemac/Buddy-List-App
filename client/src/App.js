@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import './App.css';
 import Login from './Login'
 import { withRouter } from 'react-router-dom'
-import { loginUser, verifyUser, removeToken, appearance, makeAppearance} from './services/auth'
+import { loginUser, verifyUser, removeToken, getAppearance, makeAppearance} from './services/auth'
 import Header from './Header'
 import Users from './Users'
-import {ActionCableConsumer} from 'react-actioncable-provider'
+import { ActionCableConsumer } from 'react-actioncable-provider'
+import Appearances from './Appearances'
 
 class App extends Component {
   state = {
@@ -13,65 +14,41 @@ class App extends Component {
       username: '',
       password: ''
     },
-    rooms:[],
+    appearances: [],
     currentUser: null
   }
 
   componentDidMount = async () => {
     const currentUser = await verifyUser()
-    const rooms = currentUser.id ? await makeAppearance(currentUser.id, true) : this.state.rooms
+
+    const appearance = await makeAppearance(currentUser.id, true)
     this.setState({
       currentUser,
-      rooms
+      appearances: appearance
     })
   }
 
-  // setUser = async () => {
-  //   const currentUser = await verifyUser()
-  //   const rooms = currentUser.id ? await makeAppearance(currentUser.id, true) : this.state.rooms
-  //   if (rooms) {
-  //     this.setState({
-  //       currentUser,
-  //       rooms
-  //     })
-  //   }
-  // }
+  
 
-  handleReceivedRoom = response => {
+  handleReceivedRoom = async response => {
     console.log(response)
+    const appearance = response
     this.setState({
-      rooms: [this.state.rooms, response]
+      appearances:[this.state.appearances, appearance]
     })
   } 
  
-
-
-  // handleLogin = async (e) => {
-  //   console.log('hey')
-  //   e.preventDefault()
-  //   const currentUser = await loginUser(this.state.userData)
-  //   this.setState({
-  //     currentUser
-  //   })
-  // }
 
   handleLogin = async (e) => {
     console.log('hey')
     e.preventDefault()
     const currentUser = await loginUser(this.state.userData)
-    // if (currentUser) await verifyUser()
-    const rooms = currentUser.id ? await makeAppearance(currentUser.id, true) : this.state.rooms
-    if (rooms.length) {
+    const appearance = await makeAppearance(currentUser.id, true)
       this.setState({
         currentUser, 
-        rooms
-      })
-    } else {
-      this.setState({
-        currentUser
+        appearance
       })
     }
-  }
   
 
   handleSignOut = async (e) => {
@@ -94,7 +71,6 @@ class App extends Component {
     console.log(value)
   }
   render() {
-    // let appearance = this.state.rooms
     
 
     return (
@@ -111,18 +87,22 @@ class App extends Component {
             setUser={this.setUser}
           />}
         
-        {this.state.currentUser ? <ActionCableConsumer
+        
+        <ActionCableConsumer
           channel={{ channel: 'AppearancesChannel' }}
           onReceived={this.handleReceivedRoom}
-        /> : null}
-
-        <Users
-          appearances={this.state.rooms.user_id}
         />
+          
+        <Users
+          appearances={this.state.appearances}
+        />
+
+        <Appearances/>
           
         
 
       </div>
+      
     )
   }
 }

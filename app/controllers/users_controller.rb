@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
+  # before_action :authorize_request, only: :update
 
   # GET /users
   def index
@@ -27,11 +28,20 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1
   def update
+    @user = User.find(params[:id])
     if @user.update(user_params)
       render json: @user
     else
       render json: @user.errors, status: :unprocessable_entity
     end
+
+    # render json: @user
+    
+
+
+    # if @user.status == true 
+    #   ActionCable.server.broadcast 'appearances_channel', @user
+    # end
   end
 
   # DELETE /users/1
@@ -47,6 +57,6 @@ class UsersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:email, :username, :image, :password)
+      params.require(:user).permit(:id, :email, :username, :image, :password, :status)
     end
 end

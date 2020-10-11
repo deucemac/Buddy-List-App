@@ -31,22 +31,26 @@ export const removeToken = () => {
   api.defaults.headers.common.authorization = null
 }
 
-// export const createAppearance = async (user_id) => {
-//   const resp = await api.post(`/users/${user_id}/appearances`)
-//   console.log(resp)
-//   return resp
-// }
-
-// export const appearance = async (user_id) => {
-//   const resp = await api.get(`/users/${user_id}/appearances`)
-//   console.log(resp)
-//   return resp
-// }
-
 export const makeAppearance = async (user_id, status) => {
   const resp = await api.post(`/users/${user_id}/appearances`, { status: status })
+  // const response = await api.get(`/find_user/${user_id}`)
+  // console.log(response.data)
   
   console.log(resp.data)
   return resp.data
 }
+
+export const getAppearance = async (user_id) => {
+  const resp = await api.get(`/users/${user_id}/appearances`)
+  // console.log(resp)
+  return resp.data
+}
+
+export const updateUserStatus =async (id, status)=>{
+  const resp = await api.put(`/users/${id}`, { status: status })
+  console.log(resp.data)
+  return resp.data
+}
+
+
 

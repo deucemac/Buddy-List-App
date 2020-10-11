@@ -5,7 +5,3 @@ export const getUsers = async () => {
   return response.data
 }
 
-export const getRooms = async () => {
-  const response = await api.get('/rooms')
-  return response.data
-}
