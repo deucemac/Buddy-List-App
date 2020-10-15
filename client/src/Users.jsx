@@ -4,8 +4,7 @@ import { withRouter } from 'react-router-dom'
 
 class Users extends Component {
   state = {
-    users: null, 
-    appearances: []
+    users: null
   }
 
   componentDidMount = async () => {

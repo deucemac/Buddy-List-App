@@ -38,7 +38,7 @@ class AppearancesController < ApplicationController
     #   render json: @appearance.errors, status: :unprocessable_entity
     # end
 
-    ActionCable.server.broadcast 'appearances_channel', @user
+    # ActionCable.server.broadcast 'appearances_channel', @user
   end
 
   def update

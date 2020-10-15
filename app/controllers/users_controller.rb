@@ -8,6 +8,19 @@ class UsersController < ApplicationController
 
     render json: @users
   end
+  # def index
+  #   @users = User.where(status: true)
+
+  #   render json: @users
+  # end
+
+  def get_online_users
+    @users = User.where(status: true)
+
+    render json: @users
+  end
+
+
 
   # GET /users/1
   def show
@@ -28,7 +41,6 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1
   def update
-    @user = User.find(params[:id])
     if @user.update(user_params)
       render json: @user
     else
@@ -39,9 +51,9 @@ class UsersController < ApplicationController
     
 
 
-    # if @user.status == true 
-    #   ActionCable.server.broadcast 'appearances_channel', @user
-    # end
+    if @user.status == true 
+      ActionCable.server.broadcast 'appearances_channel', @user
+    end
   end
 
   # DELETE /users/1

@@ -52,5 +52,13 @@ export const updateUserStatus =async (id, status)=>{
   return resp.data
 }
 
+export const getOnlineUsers = async () => {
+  const resp = await api.get('/users/online')
+  return resp.data
+}
+
+// export const signOutUser = async (id, status) => {
+  
+// }
 
 
