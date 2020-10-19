@@ -51,9 +51,9 @@ class UsersController < ApplicationController
     
 
 
-    if @user.status == true 
+
       ActionCable.server.broadcast 'appearances_channel', @user
-    end
+    
   end
 
   # DELETE /users/1

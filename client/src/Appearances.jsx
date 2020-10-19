@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {ActionCableConsumer} from 'react-actioncable-provider'
+import { ActionCableConsumer } from 'react-actioncable-provider'
+import {getOnlineUsers} from './services/auth'
 
 export default class Appearances extends Component {
   static propTypes = {
@@ -16,23 +17,55 @@ export default class Appearances extends Component {
     };
   }
 
-  // handleReceived = (appearance) => {
-  //   console.log(appearance)
-    
-  //     this.setState(prevState =>({
-  //       appearances: [prevState.appearances, appearance ]
-  //     }));
-  // }
-
-  handleReceived = (appearance) => {
-    const listOfAppearances = this.state.appearances
-    listOfAppearances.push(appearance)
-    let appearances = listOfAppearances
+  componentDidMount= async () =>{
+    const appearances = await getOnlineUsers()
     this.setState({
       appearances
     })
-    console.log(appearance)
   }
+
+
+  handleReceived = (appearance) => {  //
+    if (appearance.status === true) {
+    const listOfAppearances = this.state.appearances
+    listOfAppearances.push(appearance)
+      let appearances = listOfAppearances
+      this.setState({
+        appearances
+      })
+      console.log(appearance)
+      } else {
+        const appearances = this.state.appearances
+        let userToRemove = appearances.find(user => user.id === appearance.id)
+        let index = appearances.indexOf(userToRemove)
+        appearances.splice(index, 1)
+        console.log(appearances)
+      this.setState({
+            appearances
+          })
+    }
+  }
+
+  // handleReceived = (appearance) => {  //
+  //   if (appearance.status === true) {
+  //   const listOfAppearances = this.state.appearances
+  //   listOfAppearances.push(appearance)
+  //     let appearances = [...new Set(listOfAppearances)]
+  //     this.setState({
+  //       appearances
+  //     })
+  //     console.log(appearances)
+  //     } else {
+  //       const appearances = this.state.appearances
+  //       let userToRemove = appearances.find(user => user.id === appearance.id)
+  //       let index = appearances.indexOf(userToRemove)
+  //       appearances.splice(index, 1)
+  //       console.log(appearances)
+  //     this.setState({
+  //           appearances
+  //         })
+  //   }
+  // }
 
   
   render() {

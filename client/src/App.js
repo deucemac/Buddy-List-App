@@ -21,53 +21,38 @@ class App extends Component {
   componentDidMount = async () => {
     const currentUser = await verifyUser()
 
-    // const appearance = await makeAppearance(currentUser.id, true)
+    
     this.setState({
-      currentUser,
-      // appearances: appearance
+      currentUser
     })
   }
 
   
 
-  // handleReceivedRoom = async response => {
-  //   console.log(response)
-  //   const appearance = response
-  //   this.setState({
-  //     appearances:[this.state.appearances, appearance]
-  //   })
-  // } 
- 
+  
 
   handleLogin = async (e) => {
     console.log('hey')
     e.preventDefault()
     const currentUser = await loginUser(this.state.userData)
-    // const appearance = await makeAppearance(currentUser.id, true)
-    const appearance = await updateUserStatus(currentUser.id, true)
-    const listOfAppearances = this.state.appearances
-    console.log(listOfAppearances)
-    listOfAppearances.push(appearance)
-    let appearances = listOfAppearances
-    console.log(appearances)
+    await updateUserStatus(currentUser.id, true)
       this.setState({
-        currentUser, 
-        appearances
+        currentUser
       })
-    console.log(this.state.appearances)
     }
   
 
   handleSignOut = async (e) => {
-    const appearance = await updateUserStatus(this.state.currentUser.id, false)
+    await updateUserStatus(this.state.currentUser.id, false)
+    
     this.setState({
-      currentUser: null,
-      appearance
+      currentUser: null
     })
     localStorage.removeItem('authToken')
 
     removeToken();
   }
+
 
   handleChange = (e) => {
     const { name, value } = e.target;
@@ -80,7 +65,7 @@ class App extends Component {
     console.log(value)
   }
   render() {
-    const dynamicList = this.state.appearances.map((appearance) => <img src={appearance.image} style={{ width: "100px", marginLeft: "30px" }}/>)
+    
 
     return (
       <div>
@@ -105,7 +90,7 @@ class App extends Component {
         <Users />
 
         <Appearances />
-        {this.state.appearances && dynamicList}
+       
         
 
       </div>
