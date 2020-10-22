@@ -1,6 +1,6 @@
 class FriendshipController < ApplicationController
   before_action :find_user, only: :index
-  before_action :find_friendship, only: [:show, :update]
+  before_action :find_friendship, only: [:show, :update, :destroy]
   
   def index 
     @friendship = Friendship.where("requester_id = ? OR addressee_id = ?", @user.id, @user.id)
@@ -28,6 +28,10 @@ class FriendshipController < ApplicationController
     else 
       render json: @friendship.errors, status: :unprocessable_entity
     end
+  end
+
+  def destroy 
+    @friendship.destroy
   end
 
 

@@ -46,31 +46,10 @@ export default class Appearances extends Component {
     }
   }
 
-  // handleReceived = (appearance) => {  //
-  //   if (appearance.status === true) {
-  //   const listOfAppearances = this.state.appearances
-  //   listOfAppearances.push(appearance)
-  //     let appearances = [...new Set(listOfAppearances)]
-  //     this.setState({
-  //       appearances
-  //     })
-  //     console.log(appearances)
-  //     } else {
-  //       const appearances = this.state.appearances
-  //       let userToRemove = appearances.find(user => user.id === appearance.id)
-  //       let index = appearances.indexOf(userToRemove)
-  //       appearances.splice(index, 1)
-  //       console.log(appearances)
-  //     this.setState({
-  //           appearances
-  //         })
-  //   }
-  // }
-
   
   render() {
 
-    const dynamicList = this.state.appearances.map((appearance) => <img src={appearance.image} style={{ width: "100px", marginLeft: "30px" }}/>)
+    const dynamicList = this.state.appearances.map((appearance) => <img src={appearance.image} key={appearance.id} style={{ width: "100px", marginLeft: "30px" }}/>)
     return (
       <ActionCableConsumer
         channel="AppearancesChannel"

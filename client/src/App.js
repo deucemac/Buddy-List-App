@@ -7,6 +7,7 @@ import Header from './Header'
 import Users from './Users'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 import Appearances from './Appearances'
+import Friendships from './Friendships'
 
 class App extends Component {
   state = {
@@ -90,7 +91,8 @@ class App extends Component {
         <Users />
 
         <Appearances />
-       
+          
+        {this.state.currentUser && <Friendships currentUser={this.state.currentUser} />}
         
 
       </div>
