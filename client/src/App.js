@@ -88,7 +88,7 @@ class App extends Component {
           onReceived={this.handleReceivedRoom}
         />
           
-        <Users />
+        <Users currentUser={this.state.currentUser} />
 
         <Appearances />
           

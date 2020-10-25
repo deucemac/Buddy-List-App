@@ -1,5 +1,5 @@
 class FriendshipController < ApplicationController
-  before_action :find_user, only: :index
+  before_action :find_user, only: [:index, :create]
   before_action :find_friendship, only: [:show, :update, :destroy]
   
   def index 
@@ -12,15 +12,37 @@ class FriendshipController < ApplicationController
     render json: @friendship
   end
 
+  # def create
+
+  #   @friendship = Friendship.new(friendship_params)
+
+  #   if @friendship.save
+  #     render json: @friendship, status: :created
+  #   else
+  #     render json: @friendship.errors, status: :unprocessable_entity
+  #   end
+  # end
+
   def create
     @friendship = Friendship.new(friendship_params)
 
-    if @friendship.save
+    @existing_friend = Friendship.find_by(requester_id: @user.id, addressee_id: @friendship.addressee_id) 
+    @existing_friend_2 = Friendship.find_by(addressee_id: @friendship.addressee_id, requester_id: @friendship.requester_id)
+  
+    if @existing_friend
+      render json: @user
+    elsif @friendship
+      if @existing_friend_2
+      render json: @user
+      end
+    elsif @friendship.save
       render json: @friendship, status: :created
     else
       render json: @friendship.errors, status: :unprocessable_entity
     end
   end
+
+    
 
   def update 
     if @friendship.update(friendship_params)
