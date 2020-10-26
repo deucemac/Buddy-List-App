@@ -10,7 +10,8 @@ export default class Friendships extends Component {
   
     this.state = {
       friends: [],
-      friendRequests: []
+      friendRequests: [],
+      colorChange: true
     }
   }
   async componentDidMount() {
@@ -49,12 +50,23 @@ export default class Friendships extends Component {
       }
       j++
     }
+    setInterval(
+      () => this.change(),
+      500
+    );
     // console.log(list2)
     return (this.setState({
       friends: list,
       friendRequests:list2
     }))
     
+  }
+
+  change() {
+    let colorChange = !this.state.colorChange
+    this.setState({
+      colorChange
+    })
   }
 
   handleColorChange = (friendUpdate) => {
@@ -84,17 +96,61 @@ export default class Friendships extends Component {
 
 
   render() {
+    // let friendList = this.state.friends.length && this.state.friends.map((friend, index) =>
+    // <div key={index}>
+    //   <img key={index}  src={friend.image} style={{ width: "200px", marginLeft: "30px" }} />
+    //   <button style={{
+    //     backgroundColor: friend.status ? 'green' : 'red',
+    //     marginLeft: "30px",
+    //   }}>Online</button>
+    // </div>
+    // )
+    const buttonStyle = {
+      width: "10px",
+      height: "10px",
+      backgroundColor:"#6ab325",
+      border: "none",
+      color: "#6ab325",
+      // padding: "15px 32px",
+      textAlign: "center",
+      textDecoration: "none",
+      display: "inline-block",
+      fontSize: "1px",
+      margin: "4px 2px",
+      cursor: "pointer",
+      borderRadius: "50%",
+    }
 
-    
+    const buttonStyle2 = {
+      width: "10px",
+      height: "10px",
+      backgroundColor:"#78db1a",
+      border: "none",
+      color: "#78db1a",
+      // padding: "15px 32px",
+      textAlign: "center",
+      textDecoration: "none",
+      display: "inline-block",
+      fontSize: "1px",
+      margin: "4px 2px",
+      cursor: "pointer",
+      borderRadius: "50%"
+    }
     let friendList = this.state.friends.length && this.state.friends.map((friend, index) =>
     <div key={index}>
       <img key={index}  src={friend.image} style={{ width: "200px", marginLeft: "30px" }} />
-      <button style={{
-        backgroundColor: friend.status ? 'green' : 'red',
-        marginLeft: "30px",
-      }}>Online</button>
+        {friend.status ?
+          (
+            this.state.colorChange ? <button style={buttonStyle}>Online</button>
+            :
+            <button style={buttonStyle2}>Online</button>
+          )
+          : 
+          <button style={{backgroundColor:"red"}} >Offline</button>
+          }
     </div>
     )
+
     let friendRequests = this.state.friendRequests && this.state.friendRequests.map((friend, index) =>
       <div key={index}>
       <img key={index}  src={friend.image} style={{ width: "150px", marginLeft: "30px" }} />

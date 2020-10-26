@@ -1,5 +1,5 @@
 class FriendshipController < ApplicationController
-  before_action :find_user, only: [:index, :create]
+  before_action :find_user, only: [:index, :create, :destroy]
   before_action :find_friendship, only: [:show, :update, :destroy]
   
   def index 

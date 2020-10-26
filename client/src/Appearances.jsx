@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { ActionCableConsumer } from 'react-actioncable-provider'
 import {getOnlineUsers} from './services/auth'
@@ -13,7 +13,8 @@ export default class Appearances extends Component {
     this.handleReceived = this.handleReceived.bind(this);
  
     this.state = {
-      appearances: []
+      appearances: [],
+      colorChange: true
     };
   }
 
@@ -22,6 +23,10 @@ export default class Appearances extends Component {
     this.setState({
       appearances
     })
+    setInterval(
+      () => this.change(),
+      500
+    );
   }
 
 
@@ -46,10 +51,61 @@ export default class Appearances extends Component {
     }
   }
 
+  change() {
+    let colorChange = !this.state.colorChange
+    this.setState({
+      colorChange
+    })
+  }
+
+  
+
   
   render() {
 
-    const dynamicList = this.state.appearances.map((appearance) => <img src={appearance.image} key={appearance.id} style={{ width: "100px", marginLeft: "30px" }}/>)
+    const buttonStyle = {
+      width: "10px",
+      height: "10px",
+      backgroundColor:"#6ab325",
+      border: "none",
+      color: "#6ab325",
+      // padding: "15px 32px",
+      textAlign: "center",
+      textDecoration: "none",
+      display: "inline-block",
+      fontSize: "1px",
+      margin: "4px 2px",
+      cursor: "pointer",
+      borderRadius: "50%",
+    }
+
+    const buttonStyle2 = {
+      width: "10px",
+      height: "10px",
+      backgroundColor:"#78db1a",
+      border: "none",
+      color: "#78db1a",
+      // padding: "15px 32px",
+      textAlign: "center",
+      textDecoration: "none",
+      display: "inline-block",
+      fontSize: "1px",
+      margin: "4px 2px",
+      cursor: "pointer",
+      borderRadius: "50%"
+    }
+
+    const dynamicList = this.state.appearances.map((appearance) =>
+      <div key={appearance.id}>
+        <img src={appearance.image} key={appearance.id} style={{ width: "100px", marginLeft: "30px"}} />
+        {
+          this.state.colorChange ?
+          <button style={buttonStyle}>Online</button>
+          :
+            <button style={buttonStyle2}>Online</button>
+        }
+      </div>
+    )
     return (
       <ActionCableConsumer
         channel="AppearancesChannel"
