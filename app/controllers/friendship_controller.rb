@@ -27,19 +27,19 @@ class FriendshipController < ApplicationController
     @friendship = Friendship.new(friendship_params)
 
     @existing_friend = Friendship.find_by(requester_id: @user.id, addressee_id: @friendship.addressee_id) 
-    @existing_friend_2 = Friendship.find_by(addressee_id: @friendship.addressee_id, requester_id: @friendship.requester_id)
+    @existing_friend_2 = Friendship.find_by(requester_id: @friendship.addressee_id, addressee_id: @user.id)
   
-    if @existing_friend
+    if @existing_friend 
       render json: @user
-    elsif @friendship
-      if @existing_friend_2
+    elsif @existing_friend_2
       render json: @user
-      end
     elsif @friendship.save
       render json: @friendship, status: :created
     else
       render json: @friendship.errors, status: :unprocessable_entity
     end
+    
+    
   end
 
     

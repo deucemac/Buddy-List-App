@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { getFriendFromFriendship, getUserFriends, getUserFriendRequests } from './services/api-app'
+import { getFriendFromFriendship, getUserFriends, getUserFriendRequests, acceptOrDeny } from './services/api-app'
 import { ActionCableConsumer } from 'react-actioncable-provider'
+import {buttonStyle, buttonStyle2} from './services/button-style'
 
 export default class Friendships extends Component {
   constructor(...props) {
@@ -54,7 +55,7 @@ export default class Friendships extends Component {
       () => this.change(),
       500
     );
-    // console.log(list2)
+    console.log(list2)
     return (this.setState({
       friends: list,
       friendRequests:list2
@@ -90,7 +91,18 @@ export default class Friendships extends Component {
         friends
       })
     }
+  }
 
+  handleFriendshipAccept = async (e, requesterId) => {
+      e.preventDefault()
+      const currentUserId = this.props.currentUser.id
+      let list = await getUserFriendRequests(currentUserId)
+      let friendship = list.find(friendship => friendship.requester_id === requesterId)
+      console.log(friendship)
+      await acceptOrDeny(currentUserId, friendship.id, 1)
+    }
+
+  componentWillUnmount() {
     
   }
 
@@ -105,40 +117,11 @@ export default class Friendships extends Component {
     //   }}>Online</button>
     // </div>
     // )
-    const buttonStyle = {
-      width: "10px",
-      height: "10px",
-      backgroundColor:"#6ab325",
-      border: "none",
-      color: "#6ab325",
-      // padding: "15px 32px",
-      textAlign: "center",
-      textDecoration: "none",
-      display: "inline-block",
-      fontSize: "1px",
-      margin: "4px 2px",
-      cursor: "pointer",
-      borderRadius: "50%",
-    }
-
-    const buttonStyle2 = {
-      width: "10px",
-      height: "10px",
-      backgroundColor:"#78db1a",
-      border: "none",
-      color: "#78db1a",
-      // padding: "15px 32px",
-      textAlign: "center",
-      textDecoration: "none",
-      display: "inline-block",
-      fontSize: "1px",
-      margin: "4px 2px",
-      cursor: "pointer",
-      borderRadius: "50%"
-    }
+    
     let friendList = this.state.friends.length && this.state.friends.map((friend, index) =>
-    <div key={index}>
-      <img key={index}  src={friend.image} style={{ width: "200px", marginLeft: "30px" }} />
+      <div key={index}>
+        <p>{friend.username}</p>
+        <img key={index} src={friend.image} style={{ width: "200px", marginLeft: "30px" }} />
         {friend.status ?
           (
             this.state.colorChange ? <button style={buttonStyle}>Online</button>
@@ -153,11 +136,13 @@ export default class Friendships extends Component {
 
     let friendRequests = this.state.friendRequests && this.state.friendRequests.map((friend, index) =>
       <div key={index}>
+        {/* <p>{friend.username} </p> <button onClick={this.handleFriendshipAccept(friend.id)}>Accept</button> */}
+        <p>{friend.username} </p> <button onClick={(e)=> this.handleFriendshipAccept(e, friend.id)}>Accept</button>
       <img key={index}  src={friend.image} style={{ width: "150px", marginLeft: "30px" }} />
       <button style={{
         backgroundColor: friend.status ? 'green' : 'red',
         marginLeft: "30px",
-        }}>Online</button>
+        }}>Status</button>
         {/* <p>{friend.status ==}</p> */}
       </div>)
     

@@ -15,10 +15,10 @@ class Users extends Component {
     // if (users.length) this.showAppearances()
   }
 
-  handleFriendRequest = async (e) => {
+  handleFriendRequest = async (e, userId) => {
     e.preventDefault();
-    
-    await sendFriendRequest(this.props.currentUser.id)
+
+    await sendFriendRequest(this.props.currentUser.id, this.props.currentUser.id, userId, 0)
   }
 
   render() {
@@ -29,7 +29,7 @@ class Users extends Component {
           <div className='user' key={user.id}>
             <p style={{marginLeft: "30px"}}>{user.username}</p>
             <img src={user.image} style={{ width: "50px", marginLeft: "30px" }} alt='profile' />
-            <button onClick={this.handleFriendRequest}>Send Friend Request</button>
+            <button onClick={(e)=> this.handleFriendRequest(e, user.id)}>Send Friend Request</button>
           </div>
         ))}
       </div>

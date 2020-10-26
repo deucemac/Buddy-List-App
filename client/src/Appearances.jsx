@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { ActionCableConsumer } from 'react-actioncable-provider'
-import {getOnlineUsers} from './services/auth'
+import { getOnlineUsers } from './services/auth'
+import {buttonStyle, buttonStyle2} from './services/button-style'
 
 export default class Appearances extends Component {
   static propTypes = {
@@ -58,45 +59,18 @@ export default class Appearances extends Component {
     })
   }
 
+  componentWillUnmount() {
+    clearInterval(this.change)
+  }
+
   
 
   
   render() {
 
-    const buttonStyle = {
-      width: "10px",
-      height: "10px",
-      backgroundColor:"#6ab325",
-      border: "none",
-      color: "#6ab325",
-      // padding: "15px 32px",
-      textAlign: "center",
-      textDecoration: "none",
-      display: "inline-block",
-      fontSize: "1px",
-      margin: "4px 2px",
-      cursor: "pointer",
-      borderRadius: "50%",
-    }
 
-    const buttonStyle2 = {
-      width: "10px",
-      height: "10px",
-      backgroundColor:"#78db1a",
-      border: "none",
-      color: "#78db1a",
-      // padding: "15px 32px",
-      textAlign: "center",
-      textDecoration: "none",
-      display: "inline-block",
-      fontSize: "1px",
-      margin: "4px 2px",
-      cursor: "pointer",
-      borderRadius: "50%"
-    }
-
-    const dynamicList = this.state.appearances.map((appearance) =>
-      <div key={appearance.id}>
+    const dynamicList = this.state.appearances.map((appearance, index) =>
+      <div key={index}>
         <img src={appearance.image} key={appearance.id} style={{ width: "100px", marginLeft: "30px"}} />
         {
           this.state.colorChange ?

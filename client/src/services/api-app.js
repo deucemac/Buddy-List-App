@@ -18,8 +18,12 @@ export const getUserFriendRequests = async (id) => {
   return response.data.filter(friend=> friend.status !== 1)
 }
 
-export const sendFriendRequest = async (id) => {
-  const resp = await api.post(`users/${id}/friendship`)
+export const sendFriendRequest = async (id, addresseeId, status) => {
+  const resp = await api.post(`users/${id}/friendship`, {
+    requesterId: id,
+    addresseeId: addresseeId,
+    status: status
+  })
   return resp.data
 }
 
