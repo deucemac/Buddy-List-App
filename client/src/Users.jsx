@@ -18,7 +18,7 @@ class Users extends Component {
   handleFriendRequest = async (e, userId) => {
     e.preventDefault();
 
-    await sendFriendRequest(this.props.currentUser.id, this.props.currentUser.id, userId, 0)
+    await sendFriendRequest(this.props.currentUser.id, userId, 0)
   }
 
   render() {
