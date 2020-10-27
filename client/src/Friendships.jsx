@@ -4,8 +4,8 @@ import { ActionCableConsumer } from 'react-actioncable-provider'
 import {buttonStyle, buttonStyle2} from './services/button-style'
 
 export default class Friendships extends Component {
-  constructor(...props) {
-    super(...props);
+  constructor(props) {
+    super(props);
 
     this.handleColorChange = this.handleColorChange.bind(this);
   
@@ -60,7 +60,6 @@ export default class Friendships extends Component {
       friends: list,
       friendRequests:list2
     }))
-    
   }
 
   change() {
@@ -70,8 +69,11 @@ export default class Friendships extends Component {
     })
   }
 
-  handleColorChange = (friendUpdate) => {
+  handleColorChange = async(friendUpdate) => {
     console.log('foo')
+    const friendsList = await getUserFriends(this.props.currentUser.id)
+
+    if (friendsList.find(friend => friend.requester_id === friendUpdate.id) || friendsList.find(friend => friend.addressee_id === friendUpdate.id)) {
 
     if (friendUpdate.status) {
       let friends = this.state.friends
@@ -92,6 +94,7 @@ export default class Friendships extends Component {
       })
     }
   }
+}
 
   handleFriendshipAccept = async (e, requesterId) => {
       e.preventDefault()
@@ -108,20 +111,11 @@ export default class Friendships extends Component {
 
 
   render() {
-    // let friendList = this.state.friends.length && this.state.friends.map((friend, index) =>
-    // <div key={index}>
-    //   <img key={index}  src={friend.image} style={{ width: "200px", marginLeft: "30px" }} />
-    //   <button style={{
-    //     backgroundColor: friend.status ? 'green' : 'red',
-    //     marginLeft: "30px",
-    //   }}>Online</button>
-    // </div>
-    // )
     
     let friendList = this.state.friends.length && this.state.friends.map((friend, index) =>
       <div key={index}>
         <p>{friend.username}</p>
-        <img key={index} src={friend.image} style={{ width: "200px", marginLeft: "30px" }} />
+        <img key={index} src={friend.image} style={{ width: "200px", marginLeft: "30px" }} alt="profile" />
         {friend.status ?
           (
             this.state.colorChange ? <button style={buttonStyle}>Online</button>
@@ -136,24 +130,38 @@ export default class Friendships extends Component {
 
     let friendRequests = this.state.friendRequests && this.state.friendRequests.map((friend, index) =>
       <div key={index}>
-        {/* <p>{friend.username} </p> <button onClick={this.handleFriendshipAccept(friend.id)}>Accept</button> */}
         <p>{friend.username} </p> <button onClick={(e)=> this.handleFriendshipAccept(e, friend.id)}>Accept</button>
-      <img key={index}  src={friend.image} style={{ width: "150px", marginLeft: "30px" }} />
+      <img key={index}  src={friend.image} style={{ width: "150px", marginLeft: "30px" }} alt="profile" />
       <button style={{
         backgroundColor: friend.status ? 'green' : 'red',
         marginLeft: "30px",
         }}>Status</button>
-        {/* <p>{friend.status ==}</p> */}
       </div>)
     
     return (
+      // <>
+      //   <ActionCableConsumer
+      //     channel="AppearancesChannel"
+      //     onReceived={this.handleColorChange}
+      //   >
+      //     <h2>Buddy List</h2>
+      //     {this.state.friends && friendList}
+      //     <h2>Pending Friends</h2>
+      //     {this.state.friendRequests && friendRequests}</ActionCableConsumer>
+
+      // </>
       <>
         <ActionCableConsumer
           channel="AppearancesChannel"
           onReceived={this.handleColorChange}
         >
           <h2>Buddy List</h2>
-          {this.state.friends && friendList}
+          {this.state.friends && friendList}</ActionCableConsumer>
+        
+        <ActionCableConsumer
+        channel="AppearancesChannel"
+        onReceived={this.handleColorChange}
+        >
           <h2>Pending Friends</h2>
           {this.state.friendRequests && friendRequests}</ActionCableConsumer>
 

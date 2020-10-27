@@ -8,8 +8,8 @@ export default class Appearances extends Component {
   static propTypes = {
     appearances: PropTypes.array
   };
-  constructor(...props) {
-    super(...props);
+  constructor(props) {
+    super(props);
  
     this.handleReceived = this.handleReceived.bind(this);
  
@@ -71,7 +71,7 @@ export default class Appearances extends Component {
 
     const dynamicList = this.state.appearances.map((appearance, index) =>
       <div key={index}>
-        <img src={appearance.image} key={appearance.id} style={{ width: "100px", marginLeft: "30px"}} />
+        <img src={appearance.image} key={appearance.id} style={{ width: "100px", marginLeft: "30px"}} alt="profile"/>
         {
           this.state.colorChange ?
           <button style={buttonStyle}>Online</button>

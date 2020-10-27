@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import Login from './Login'
 import { withRouter } from 'react-router-dom'
-import { loginUser, verifyUser, removeToken, getAppearance,updateUserStatus, makeAppearance} from './services/auth'
+import { loginUser, verifyUser, removeToken, updateUserStatus } from './services/auth'
 import Header from './Header'
 import Users from './Users'
 import { ActionCableConsumer } from 'react-actioncable-provider'

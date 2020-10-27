@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 export default class Login extends Component {
   
   render() {
-    const { userData, handleChange, handleLogin, setUser } = this.props;
+    const { userData, handleChange, handleLogin} = this.props;
     return (
       <div>
         <form onSubmit={handleLogin}>
