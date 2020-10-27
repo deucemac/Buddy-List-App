@@ -7,14 +7,12 @@ export const getUsers = async () => {
 
 export const getUserFriends = async (id) => {
   const response = await api.get(`users/${id}/friendship`)
-  console.log(response.data.filter(friend=> friend.status ===1))
-  // response = response.data.filter(friend => friend.status === 1)
   return response.data.filter(friend=> friend.status ===1)
 }
 
 export const getUserFriendRequests = async (id) => {
   const response = await api.get(`users/${id}/friendship`)
-  console.log(response.data.filter(friend=> friend.status !==1))
+  
   return response.data.filter(friend=> friend.status !== 1)
 }
 

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom'
 import { loginUser, verifyUser, removeToken, updateUserStatus } from './services/auth'
 import Header from './Header'
 import Users from './Users'
-import { ActionCableConsumer } from 'react-actioncable-provider'
+import './css/App1.css'
 import Appearances from './Appearances'
 import Friendships from './Friendships'
 
@@ -69,7 +69,7 @@ class App extends Component {
     
 
     return (
-      <div>
+      <div className="app">
         {this.state.currentUser ?
           <Header
             currentUser={this.state.currentUser}
@@ -82,19 +82,21 @@ class App extends Component {
             setUser={this.setUser}
           />}
         
+
+        <div className="friend-appearance-container">
+          <div className="friendship-list">
+          {this.state.currentUser && <Friendships currentUser={this.state.currentUser} />}
+          </div>
         
-        <ActionCableConsumer
-          channel={{ channel: 'AppearancesChannel' }}
-          onReceived={this.handleReceivedRoom}
-        />
-          
+          <div className="appearances-list" >
+          <Appearances />
+          </div>
+        </div>
+
+        
+
+
         <Users currentUser={this.state.currentUser} />
-
-        <Appearances />
-          
-        {this.state.currentUser && <Friendships currentUser={this.state.currentUser} />}
-        
-
       </div>
       
     )

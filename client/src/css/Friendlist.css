@@ -1,0 +1,23 @@
+.friend-list-username{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.accept-request{
+  background-color: #32a8a8;
+  border: none;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: white;
+  padding: 15px 32px;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 4px 2px;
+  width: 100px;
+}
+
+.friend-request-img{
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+}

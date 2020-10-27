@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { getFriendFromFriendship, getUserFriends, getUserFriendRequests, acceptOrDeny } from './services/api-app'
+import { getFriendFromFriendship, getUserFriends, getUserFriendRequests, acceptOrDeny, denyFriendship} from './services/api-app'
 import { ActionCableConsumer } from 'react-actioncable-provider'
-import {buttonStyle, buttonStyle2} from './services/button-style'
+import { buttonStyle, buttonStyle2, buttonStyle3 } from './services/button-style'
+import './css/Friendlist.css'
 
 export default class Friendships extends Component {
   constructor(props) {
@@ -11,8 +12,7 @@ export default class Friendships extends Component {
   
     this.state = {
       friends: [],
-      friendRequests: [],
-      colorChange: true
+      friendRequests: []
     }
   }
   async componentDidMount() {
@@ -42,33 +42,25 @@ export default class Friendships extends Component {
       }
       j++
     }
-    setInterval(
-      () => this.change(),
-      500
-    );
-    console.log(list2)
+
     return (this.setState({
       friends: list,
       friendRequests:list2
     }))
   }
 
-  change() {
-    let colorChange = !this.state.colorChange
-    this.setState({
-      colorChange
-    })
-  }
+  
 
-  handleColorChange = async(friendUpdate) => {
-    console.log('foo')
+
+
+  handleColorChange = async (friendUpdate) => {
+    // doesn't change color for pending friends
     const friendsList = await getUserFriends(this.props.currentUser.id)
 
     if (friendsList.find(friend => friend.requester_id === friendUpdate.id) || friendsList.find(friend => friend.addressee_id === friendUpdate.id)) {
 
     if (friendUpdate.status) {
       let friends = this.state.friends
-      console.log(friends)
       let userToRemove = friends.find(friend => friend.id === friendUpdate.id)
       let index = friends.indexOf(userToRemove)
       friends.splice(index, 1, friendUpdate)
@@ -87,14 +79,37 @@ export default class Friendships extends Component {
   }
 }
 
-  handleFriendshipAccept = async (e, requesterId) => {
-      e.preventDefault()
+  handleFriendshipAccept = async (e, requesterId, friend) => {
+    e.preventDefault()
+      let friendRequests = this.state.friendRequests
+      let friends = this.state.friends
       const currentUserId = this.props.currentUser.id
-      let list = await getUserFriendRequests(currentUserId)
-      let friendship = list.find(friendship => friendship.requester_id === requesterId)
-      console.log(friendship)
-      await acceptOrDeny(currentUserId, friendship.id, 1)
-    }
+      let list = await getUserFriendRequests(currentUserId) //list of pending friends
+      let friendship = list.find(friendship => friendship.requester_id === requesterId) //find the 1 specific friend
+      
+    let indexToRemoveRequest = friendRequests.findIndex(friendRequest => friendRequest.id === friendship.id) //find index of friend to remove
+    friendRequests.splice(indexToRemoveRequest, 1) //remove friend from pending list
+    await acceptOrDeny(currentUserId, friendship.id, 1)
+    friends.push(friend)
+    this.setState({
+      friends,
+      friendRequests
+    })
+  }
+  
+  handleFriendshipDeny = async (e, requesterId) => {
+    e.preventDefault()
+    let friendRequests = this.state.friendRequests
+    const currentUserId = this.props.currentUser.id
+    let list = await getUserFriendRequests(currentUserId) // get Pending Friends list
+    let friendship = list.find(friendship => friendship.requester_id === requesterId) //find specific friend request
+    let indexToRemoveRequest = friendRequests.findIndex(friendRequest => friendRequest.id === friendship.id) //find index of friend to remove
+    friendRequests.splice(indexToRemoveRequest, 1) //remove friend from pending list
+    this.setState({
+      friendRequests
+    })
+    await denyFriendship(currentUserId, friendship.id)
+  }
 
   componentWillUnmount() {
     
@@ -105,28 +120,39 @@ export default class Friendships extends Component {
     
     let friendList = this.state.friends.length && this.state.friends.map((friend, index) =>
       <div key={index}>
-        <p>{friend.username}</p>
+        <p className="friend-list-username">{friend.username}</p>
         <img key={index} src={friend.image} style={{ width: "200px", marginLeft: "30px" }} alt="profile" />
-        {friend.status ?
+        {/* {friend.status ?
           (
             this.state.colorChange ? <button style={buttonStyle}>Online</button>
             :
             <button style={buttonStyle2}>Online</button>
           )
           : 
-          <button style={{backgroundColor:"red"}} >Offline</button>
+          <button style={buttonStyle3} >Offline</button>
+          } */}
+        {
+          friend.status ?
+          <div style={buttonStyle}></div>
+          :
+            <div style={buttonStyle3}></div>
           }
     </div>
     )
 
     let friendRequests = this.state.friendRequests && this.state.friendRequests.map((friend, index) =>
       <div key={index}>
-        <p>{friend.username} </p> <button onClick={(e)=> this.handleFriendshipAccept(e, friend.id)}>Accept</button>
-      <img key={index}  src={friend.image} style={{ width: "150px", marginLeft: "30px" }} alt="profile" />
-      <button style={{
-        backgroundColor: friend.status ? 'green' : 'red',
-        marginLeft: "30px",
-        }}>Status</button>
+        <p className="friend-list-username">{friend.username}</p>
+  
+        <img key={index} className="friend-request-img" src={friend.image} alt="profile" />
+        {
+          friend.status ?
+          <div style={buttonStyle}></div>
+          :
+          <div style={buttonStyle3}></div>
+        }
+        <button className="accept-request" onClick={(e) => this.handleFriendshipAccept(e, friend.id, friend)}>Accept</button>
+        <button className="accept-request" onClick={(e) => this.handleFriendshipDeny(e, friend.id)}>Deny</button>
       </div>)
     
     return (
@@ -136,14 +162,12 @@ export default class Friendships extends Component {
           onReceived={this.handleColorChange}
         >
           <h2>Buddy List</h2>
-          {this.state.friends && friendList}</ActionCableConsumer>
-        
-        <ActionCableConsumer
-        channel="AppearancesChannel"
-        onReceived={this.handleColorChange}
-        >
+          {this.state.friends && friendList}
           <h2>Pending Friends</h2>
-          {this.state.friendRequests && friendRequests}</ActionCableConsumer>
+          {this.state.friendRequests && friendRequests}
+        
+        </ActionCableConsumer>
+        
       </>
     )
   }
