@@ -18,16 +18,7 @@ export default class Friendships extends Component {
   async componentDidMount() {
     
     const friendsList = await getUserFriends(this.props.currentUser.id)
-    // await friendsList.forEach(friendship => {
-    //   let list = []
-    //   if (this.props.currentUser.id === friendship.requester_id) {
-    //     let newFriend = getFriendFromFriendship(friendship.addressee_id)
-    //     list.push(newFriend)
-    //   } else {
-    //     let newFriend = getFriendFromFriendship(friendship.requester_id)
-    //     list.push(newFriend)
-    //   }
-    // })
+  
     let i = 0
     let list = []
     while (i < friendsList.length) {
@@ -139,17 +130,6 @@ export default class Friendships extends Component {
       </div>)
     
     return (
-      // <>
-      //   <ActionCableConsumer
-      //     channel="AppearancesChannel"
-      //     onReceived={this.handleColorChange}
-      //   >
-      //     <h2>Buddy List</h2>
-      //     {this.state.friends && friendList}
-      //     <h2>Pending Friends</h2>
-      //     {this.state.friendRequests && friendRequests}</ActionCableConsumer>
-
-      // </>
       <>
         <ActionCableConsumer
           channel="AppearancesChannel"
@@ -164,7 +144,6 @@ export default class Friendships extends Component {
         >
           <h2>Pending Friends</h2>
           {this.state.friendRequests && friendRequests}</ActionCableConsumer>
-
       </>
     )
   }
