@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { getFriendFromFriendship, getUserFriends, getUserFriendRequests, acceptOrDeny, denyFriendship} from './services/api-app'
 import { ActionCableConsumer } from 'react-actioncable-provider'
-import { buttonStyle, buttonStyle2, buttonStyle3 } from './services/button-style'
+import { buttonStyle, buttonStyle3 } from './services/button-style'
 import './css/Friendlist.css'
 
 export default class Friendships extends Component {
@@ -16,7 +16,7 @@ export default class Friendships extends Component {
     }
   }
   async componentDidMount() {
-    
+    // setting the respective friends lists
     const friendsList = await getUserFriends(this.props.currentUser.id)
   
     let i = 0
@@ -101,7 +101,7 @@ export default class Friendships extends Component {
     e.preventDefault()
     let friendRequests = this.state.friendRequests
     const currentUserId = this.props.currentUser.id
-    let list = await getUserFriendRequests(currentUserId) // get Pending Friends list
+    let list = await getUserFriendRequests(currentUserId) // get pending friends list
     let friendship = list.find(friendship => friendship.requester_id === requesterId) //find specific friend request
     let indexToRemoveRequest = friendRequests.findIndex(friendRequest => friendRequest.id === friendship.id) //find index of friend to remove
     friendRequests.splice(indexToRemoveRequest, 1) //remove friend from pending list
@@ -111,35 +111,50 @@ export default class Friendships extends Component {
     await denyFriendship(currentUserId, friendship.id)
   }
 
-  componentWillUnmount() {
+  handleFriendDelete = async (e, friendToRemove) => {
+    e.preventDefault()
+    // remove from DOM and state
+    const currentUserId = this.props.currentUser.id
+    let friends = this.state.friends
+    let friendToDeleteIndex = friends.findIndex(friend => friend.id === friendToRemove.id)//index for deletion
+    friends.splice(friendToDeleteIndex, 1) //removing friend from state
+    this.setState({
+      friends
+    })
+    // Lines below are to remove from database
+    let list = await getUserFriends(this.props.currentUser.id) //get current friends
+    let friendshipToRemove1 = list.find(relationship => relationship.requester_id === friendToRemove)
+    let friendshipToRemove2 = list.find(relationship => relationship.addressee_id === friendToRemove)
     
+    if (friendshipToRemove1) {
+      await denyFriendship(currentUserId, friendshipToRemove1.id)
+    } else if (friendshipToRemove2) {
+      await denyFriendship(currentUserId, friendshipToRemove2.id)
+    }
   }
 
 
+
   render() {
-    
+    //show friends
     let friendList = this.state.friends.length && this.state.friends.map((friend, index) =>
-      <div key={index}>
+      <div className="main-friend-list" key={index}>
         <p className="friend-list-username">{friend.username}</p>
-        <img key={index} src={friend.image} style={{ width: "200px", marginLeft: "30px" }} alt="profile" />
-        {/* {friend.status ?
-          (
-            this.state.colorChange ? <button style={buttonStyle}>Online</button>
-            :
-            <button style={buttonStyle2}>Online</button>
-          )
-          : 
-          <button style={buttonStyle3} >Offline</button>
-          } */}
+        <div className="img-and-button-container">
+        <img className="friend-list-image" key={index} src={friend.image} alt="profile" />
         {
           friend.status ?
-          <div style={buttonStyle}></div>
+            <div style={buttonStyle}></div>
           :
             <div style={buttonStyle3}></div>
           }
+        </div>
+        <div className="delete-button">
+          <button className="delete" onClick={(e)=>this.handleFriendDelete(e, friend.id)} >delete</button>
+        </div>
     </div>
     )
-
+    // show pending friends
     let friendRequests = this.state.friendRequests && this.state.friendRequests.map((friend, index) =>
       <div key={index}>
         <p className="friend-list-username">{friend.username}</p>
@@ -152,7 +167,7 @@ export default class Friendships extends Component {
           <div style={buttonStyle3}></div>
         }
         <button className="accept-request" onClick={(e) => this.handleFriendshipAccept(e, friend.id, friend)}>Accept</button>
-        <button className="accept-request" onClick={(e) => this.handleFriendshipDeny(e, friend.id)}>Deny</button>
+        <button className="accept-request" onClick={(e) => this.handleFriendshipDeny(e, friend)}>Deny</button>
       </div>)
     
     return (
@@ -161,10 +176,14 @@ export default class Friendships extends Component {
           channel="AppearancesChannel"
           onReceived={this.handleColorChange}
         >
-          <h2>Buddy List</h2>
-          {this.state.friends && friendList}
+            <div className="buddy-list">
+            <h2>Buddy List</h2>
+            </div>
+          <div className="parent-friend-list-container" >
+            {this.state.friends && friendList}
+            </div>
           <h2>Pending Friends</h2>
-          {this.state.friendRequests && friendRequests}
+          {this.state.friendRequests && (this.state.friendRequests.length > 0 ? friendRequests : '0')}
         
         </ActionCableConsumer>
         

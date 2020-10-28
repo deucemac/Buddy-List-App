@@ -8,11 +8,7 @@ class UsersController < ApplicationController
 
     render json: @users
   end
-  # def index
-  #   @users = User.where(status: true)
 
-  #   render json: @users
-  # end
 
   def get_online_users
     @users = User.where(status: true)
@@ -46,11 +42,6 @@ class UsersController < ApplicationController
     else
       render json: @user.errors, status: :unprocessable_entity
     end
-
-    # render json: @user
-    
-
-
 
       ActionCable.server.broadcast 'appearances_channel', @user
     

@@ -28,12 +28,7 @@ class App extends Component {
     })
   }
 
-  
-
-  
-
   handleLogin = async (e) => {
-    console.log('hey')
     e.preventDefault()
     const currentUser = await loginUser(this.state.userData)
     await updateUserStatus(currentUser.id, true)
@@ -63,7 +58,6 @@ class App extends Component {
         [name]: value
       }
     }))
-    console.log(value)
   }
   render() {
     
@@ -84,9 +78,9 @@ class App extends Component {
         
 
         <div className="friend-appearance-container">
-          <div className="friendship-list">
+          
           {this.state.currentUser && <Friendships currentUser={this.state.currentUser} />}
-          </div>
+       
         
           <div className="appearances-list" >
           <Appearances />

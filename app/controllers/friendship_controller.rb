@@ -12,17 +12,6 @@ class FriendshipController < ApplicationController
     render json: @friendship
   end
 
-  # def create
-
-  #   @friendship = Friendship.new(friendship_params)
-
-  #   if @friendship.save
-  #     render json: @friendship, status: :created
-  #   else
-  #     render json: @friendship.errors, status: :unprocessable_entity
-  #   end
-  # end
-
   def create
     @friendship = Friendship.new(friendship_params)
 
@@ -38,10 +27,7 @@ class FriendshipController < ApplicationController
     else
       render json: @friendship.errors, status: :unprocessable_entity
     end
-    
-    
   end
-
     
 
   def update 
