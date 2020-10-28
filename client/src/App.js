@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom'
 import { loginUser, verifyUser, removeToken, updateUserStatus } from './services/auth'
 import Header from './Header'
 import Users from './Users'
-import { ActionCableConsumer } from 'react-actioncable-provider'
+import './css/App1.css'
 import Appearances from './Appearances'
 import Friendships from './Friendships'
 
@@ -28,12 +28,7 @@ class App extends Component {
     })
   }
 
-  
-
-  
-
   handleLogin = async (e) => {
-    console.log('hey')
     e.preventDefault()
     const currentUser = await loginUser(this.state.userData)
     await updateUserStatus(currentUser.id, true)
@@ -63,13 +58,12 @@ class App extends Component {
         [name]: value
       }
     }))
-    console.log(value)
   }
   render() {
     
 
     return (
-      <div>
+      <div className="app">
         {this.state.currentUser ?
           <Header
             currentUser={this.state.currentUser}
@@ -82,19 +76,21 @@ class App extends Component {
             setUser={this.setUser}
           />}
         
-        
-        <ActionCableConsumer
-          channel={{ channel: 'AppearancesChannel' }}
-          onReceived={this.handleReceivedRoom}
-        />
+
+        <div className="friend-appearance-container">
           
+          {this.state.currentUser && <Friendships currentUser={this.state.currentUser} />}
+       
+        
+          <div className="appearances-list" >
+          <Appearances />
+          </div>
+        </div>
+
+        
+
+
         <Users currentUser={this.state.currentUser} />
-
-        <Appearances />
-          
-        {this.state.currentUser && <Friendships currentUser={this.state.currentUser} />}
-        
-
       </div>
       
     )

@@ -26,19 +26,6 @@ class AppearancesController < ApplicationController
       render json: @appearance.errors, status: :unprocessable_entity
     end
     
-    
-
-
-    # @appearance = Appearance.new(appearance_params)
-    # @appearance.user_id = @user.id
-    # if @appearance.save
-    #   render json: @appearance, status: :created
-
-    # else 
-    #   render json: @appearance.errors, status: :unprocessable_entity
-    # end
-
-    # ActionCable.server.broadcast 'appearances_channel', @user
   end
 
   def update

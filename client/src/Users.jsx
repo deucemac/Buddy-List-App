@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { getUsers, sendFriendRequest } from './services/api-app'
 import { withRouter } from 'react-router-dom'
+import './css/User.css'
 
 class Users extends Component {
   state = {
@@ -12,7 +13,6 @@ class Users extends Component {
     this.setState({
       users
     })
-    // if (users.length) this.showAppearances()
   }
 
   handleFriendRequest = async (e, userId) => {
@@ -24,12 +24,14 @@ class Users extends Component {
   render() {
 
     return (
-      <div>
+      <div className="user-container">
         {this.state.users && this.state.users.map(user => (
           <div className='user' key={user.id}>
-            <p style={{marginLeft: "30px"}}>{user.username}</p>
-            <img src={user.image} style={{ width: "50px", marginLeft: "30px" }} alt='profile' />
-            <button onClick={(e)=> this.handleFriendRequest(e, user.id)}>Send Friend Request</button>
+            <p className="username">{user.username}</p>
+            <div className="img"><img src={user.image} className='users-profile' alt='profile' /></div>
+            <div className="friendRequest">
+              <button className="request" onClick={(e) => this.handleFriendRequest(e, user.id)}>Send Friend Request</button>
+              </div>
           </div>
         ))}
       </div>

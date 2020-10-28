@@ -1,0 +1,62 @@
+.parent-friend-list-container{
+  display: flex;
+}
+
+.buddy-list{
+  text-align: center;
+}
+
+.friend-list-username{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-size: 16px;
+}
+
+.main-friend-list{
+  display: flex;
+  flex-direction: column;
+  margin: 0 20px;
+}
+
+.accept-request{
+  background-color: #32a8a8;
+  border: none;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: white;
+  padding: 15px 32px;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 4px 2px;
+  width: 100px;
+}
+
+.friend-request-img{
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.friend-list-image{
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.delete{
+  background-color: #32a8a8;
+  border: none;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: white;
+  padding: 8px 16px;
+  display: inline-block;
+  font-size: 12px;
+  cursor: pointer;
+  margin: 4px 2px;
+  width: 100px;
+}
+
+.delete-button{
+  text-align: center;
+}

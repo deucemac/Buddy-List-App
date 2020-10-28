@@ -1,0 +1,29 @@
+header{
+  display: flex;
+  flex-direction: column;
+}
+
+h2{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.greet-user{
+  border-radius: 15%;
+  width: 100px;
+  height:100px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.signOut{
+  background-color: #32a8a8;
+  border: none;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: white;
+  padding: 15px 32px;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 4px 2px;
+  width: 100px;
+}

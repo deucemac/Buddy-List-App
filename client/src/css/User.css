@@ -1,0 +1,35 @@
+.user-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.user{
+  display:flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.username{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  height:20px;
+  width: 20em;
+}
+
+.users-profile{
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  /* border: 10px solid transparent; */
+  border: 10px solid transparent;
+  padding: 15px;
+  border-image: url(https://media.overstockart.com/optimized/cache/data/frames/FR-REGBLACK20X24-1000x1000.png) 30 round;
+  margin: 20px 20px;
+}
+
+.request{
+  border: none;
+  cursor: pointer;
+  padding: 15px;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
