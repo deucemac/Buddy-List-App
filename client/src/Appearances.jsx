@@ -28,7 +28,6 @@ export default class Appearances extends Component {
   }
 
   handleReceived = (appearance) => {  
-    console.log(appearance)
     if (appearance.status === true) {
     const listOfAppearances = this.state.appearances
     listOfAppearances.push(appearance)
